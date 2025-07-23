@@ -32,6 +32,11 @@ io.on('connection', (socket) => {
     });
 });
 
+// Health check route for Render
+app.get('/', (req, res) => {
+    res.send('Kaste Brands & Designs API is running.');
+});
+
 // API Routes
 app.get('/api/content', async (req, res) => {
     try {
