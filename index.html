@@ -148,6 +148,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <style id="branding-styles"></style>
     <style>
+      /* Prevents white flash before React loads by setting the default background color */
+      body {
+        background-color: #1A1A1A; /* Matches the default --color-brand-bg */
+      }
       .flash-highlight {
         animation: flash 1.5s ease-out;
         --color-brand-secondary-rgb: 245, 184, 65; /* Fallback */
@@ -166,10 +170,8 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
-  <body class="bg-transparent text-brand-light font-sans">
+  <body class="bg-brand-bg text-brand-light font-sans">
     <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
-</body>
+  </body>
 </html>
