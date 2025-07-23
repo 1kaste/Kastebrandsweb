@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kaste Brands & Designs</title>
-    <!-- Tailwind CSS CDN - Consider replacing this with a PostCSS setup for production -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -27,8 +26,8 @@
               'brand-dark-text': 'var(--color-brand-dark-text)',
             },
             fontFamily: {
-              sans: ['Lato', 'sans-serif'],
-              heading: ['Josefin Sans', 'sans-serif'],
+                sans: ['Lato', 'sans-serif'],
+                heading: ['Josefin Sans', 'sans-serif'],
             },
             backgroundImage: {
               'wipe-gradient': 'linear-gradient(to right, var(--color-brand-secondary) 50%, var(--color-brand-primary) 50%)',
@@ -120,11 +119,11 @@
                 }
               },
               flash: {
-                'from': {
+                'from': { 
                   backgroundColor: 'rgba(var(--color-brand-secondary-rgb), 0.25)',
                   outline: '1px solid rgba(var(--color-brand-secondary-rgb), 0.5)',
                 },
-                'to': {
+                'to': { 
                   backgroundColor: 'transparent',
                   outline: '1px solid transparent',
                 },
@@ -134,9 +133,9 @@
                 'to': { width: '0%' }
               },
               'fly-to-nav': {
-                'to': {
-                  transform: 'translate(var(--fly-to-x, 0), var(--fly-to-y, 0)) scale(0)',
-                  opacity: '0'
+                'to': { 
+                  transform: 'translate(var(--fly-to-x, 0), var(--fly-to-y, 0)) scale(0)', 
+                  opacity: '0' 
                 }
               },
             },
@@ -164,54 +163,23 @@
         --color-brand-secondary-rgb: 245, 184, 65; /* Fallback */
       }
     </style>
-    <script type="importmap">
-      {
-        "imports": {
-          "react-dom/client": "https://esm.sh/react-dom@^19.1.0/client",
-          "react/": "https://esm.sh/react@^19.1.0/",
-          "react": "https://esm.sh/react@^19.1.0",
-          "react-router-dom": "https://esm.sh/react-router-dom@^6.25.1",
-          "lucide-react": "https://esm.sh/lucide-react@^0.525.0",
-          "@google/genai": "https://esm.sh/@google/genai",
-          "socket.io-client": "https://esm.sh/socket.io-client@^4.7.5"
-        }
-      }
-    </script>
-  </head>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-router-dom": "https://esm.sh/react-router-dom@^6.25.1",
+    "lucide-react": "https://esm.sh/lucide-react@^0.525.0",
+    "@google/genai": "https://esm.sh/@google/genai",
+    "socket.io-client": "https://esm.sh/socket.io-client@^4.7.5"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
   <body class="bg-brand-bg text-brand-light font-sans">
-    <div id="root" class="min-h-screen flex items-center justify-center"></div>
-
-    <script type="module">
-      import React from 'react';
-      import { createRoot } from 'react-dom/client';
-
-      // Main React App component
-      function App() {
-        return (
-          <div className="text-center p-8">
-            <h1 className="text-4xl font-heading text-brand-primary mb-4 animate-fade-in-up">
-              Welcome to Kaste Brands & Designs!
-            </h1>
-            <p className="text-lg text-brand-light animate-fade-in-up delay-200">
-              Your creative journey starts here.
-            </p>
-            <p className="text-sm text-brand-gray mt-8">
-              If you're seeing this, your React app is now rendering!
-            </p>
-          </div>
-        );
-      }
-
-      // Get the root element from the HTML
-      const container = document.getElementById('root');
-
-      // Create a root for React 18+ and render the App component
-      if (container) {
-        const root = createRoot(container);
-        root.render(<App />);
-      } else {
-        console.error('Root element with ID "root" not found in the document.');
-      }
-    </script>
-  </body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
 </html>
