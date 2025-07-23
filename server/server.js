@@ -13,28 +13,22 @@ const server = http.createServer(app);
 // Connect to MongoDB
 connectDB();
 
-// --- CORS Configuration ---
-// This setup is robustly configured to handle requests from any origin,
-// including preflight OPTIONS requests sent by browsers. This is crucial
-// for fixing the CORS errors when the frontend is deployed on a different
-// domain (like Netlify) from the backend (like Render).
-const corsOptions = {
-  origin: '*', // Allows all domains to make requests.
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Specifies allowed HTTP methods.
-  allowedHeaders: ['Content-Type', 'Authorization'], // Specifies allowed request headers.
-};
-
 // --- Middleware ---
-// By using `app.use(cors(corsOptions))`, we enable CORS for all routes.
-// This single line correctly handles simple and preflighted CORS requests.
-// A separate `app.options('*', ...)` call is not needed and has been removed.
-app.use(cors(corsOptions));
+// Use the cors middleware with its default configuration, which allows all origins ('*').
+// This is the simplest and most robust way to handle CORS for a public API,
+// including preflight (OPTIONS) requests.
+app.use(cors());
+
+// Ensure the JSON body parser is used after the CORS middleware.
 app.use(express.json({ limit: '50mb' })); // Increase limit for potential base64 images
 
 // --- Socket.IO Setup ---
-// Use the same CORS options for Socket.IO to ensure real-time connections work across domains.
+// Configure Socket.IO separately with explicit CORS options to ensure real-time connections work.
 const io = new Server(server, {
-    cors: corsOptions
+    cors: {
+        origin: "*", // Allow all origins for WebSocket connections
+        methods: ["GET", "POST"]
+    }
 });
 
 io.on('connection', (socket) => {
