@@ -1,4 +1,5 @@
 
+
 import React, { useState, FormEvent, useEffect } from 'react';
 import { GoogleGenAI } from "@google/genai";
 import { getServices, getSiteContent } from '../services/siteContent';
@@ -39,10 +40,11 @@ const ContactPage: React.FC = () => {
     setError('');
 
     try {
-      if (!process.env.API_KEY) {
+      const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : undefined;
+      if (!apiKey) {
         throw new Error("API_KEY environment variable not set.");
       }
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = new GoogleGenAI({ apiKey: apiKey });
       
       const selectedService = allServices.find(s => s.id === formData.serviceId);
       const selectedServiceName = selectedService ? selectedService.title : 'General Inquiry';

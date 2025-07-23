@@ -1,7 +1,7 @@
 
 import { SiteContent, Service, Project } from '../types';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+export const API_URL = (typeof process !== 'undefined' && process.env.REACT_APP_API_URL) || 'http://localhost:3001';
 
 // In-memory cache for the site content
 let siteContentCache: SiteContent | null = null;

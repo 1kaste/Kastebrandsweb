@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
 import { useAdminPanel } from '../contexts/AdminPanelContext';
 import { getSiteContent, saveSiteContent, resetSiteContent } from '../services/siteContent';
@@ -236,9 +237,12 @@ const AdminPanel: React.FC = () => {
         updateProjectUiState(projectId, { generationStatus: 'loading', generationError: '' });
         
         try {
-            if (!process.env.API_KEY) throw new Error("API Key is not configured.");
+            const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : undefined;
+            if (!apiKey) {
+              throw new Error("API Key is not configured.");
+            }
             
-            const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+            const ai = new GoogleGenAI({ apiKey: apiKey });
             const response = await ai.models.generateImages({
                 model: 'imagen-3.0-generate-002',
                 prompt: currentState.prompt,

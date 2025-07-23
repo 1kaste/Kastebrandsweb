@@ -1,4 +1,5 @@
 
+
 import React, { useEffect, useState } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
@@ -16,13 +17,11 @@ import FloatingContact from './components/FloatingContact';
 import ContactPage from './components/ContactPage';
 import { AdminPanelProvider } from './contexts/AdminPanelContext';
 import AdminPanel from './components/AdminPanel';
-import { fetchAndCacheSiteContent, getCachedSiteContent } from './services/siteContent';
+import { fetchAndCacheSiteContent, getCachedSiteContent, API_URL } from './services/siteContent';
 import SplashScreen from './components/SplashScreen';
 import AnnouncementPopup from './components/AnnouncementPopup';
 import { AnnouncementProvider } from './contexts/AnnouncementContext';
 import { io, Socket } from "socket.io-client";
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 const hexToRgb = (hex: string): string => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
