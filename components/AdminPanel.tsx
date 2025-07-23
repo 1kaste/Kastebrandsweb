@@ -102,14 +102,18 @@ const LoginForm: React.FC = () => {
     const { login } = useAdminPanel();
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const success = login(password);
+        setError('');
+        setIsLoading(true);
+        const success = await login(password);
         if (!success) {
             setError('Incorrect password. Please try again.');
             setPassword('');
         }
+        setIsLoading(false);
     };
 
     return (
@@ -130,9 +134,9 @@ const LoginForm: React.FC = () => {
                         />
                     </div>
                     {error && <p id="admin-login-error" className="text-sm text-red-400 text-center">{error}</p>}
-                    <button type="submit" className="w-full flex items-center justify-center px-6 py-3 font-bold rounded-lg text-brand-dark-text bg-brand-secondary hover:bg-yellow-500 transition-all transform hover:scale-105">
-                        <LogIn className="mr-2 h-5 w-5" />
-                        Authenticate
+                    <button type="submit" disabled={isLoading} className="w-full flex items-center justify-center px-6 py-3 font-bold rounded-lg text-brand-dark-text bg-brand-secondary hover:bg-yellow-500 transition-all transform hover:scale-105 disabled:bg-brand-gray disabled:cursor-not-allowed disabled:transform-none">
+                        {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <LogIn className="mr-2 h-5 w-5" />}
+                        {isLoading ? 'Authenticating...' : 'Authenticate'}
                     </button>
                 </form>
             </div>

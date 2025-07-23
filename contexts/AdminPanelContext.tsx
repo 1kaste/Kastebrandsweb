@@ -1,14 +1,12 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-
-// The master password. In a real app, this should be handled securely, not hardcoded.
-const MASTER_PASSWORD = '39344323';
+import { API_URL } from '../services/siteContent';
 
 interface AdminPanelContextType {
   openPanel: () => void;
   closePanel: () => void;
   isOpen: boolean;
   isAuthenticated: boolean;
-  login: (password: string) => boolean;
+  login: (password: string) => Promise<boolean>;
   logout: () => void;
 }
 
@@ -33,12 +31,35 @@ export const AdminPanelProvider: React.FC<{ children: ReactNode }> = ({ children
     document.body.style.overflow = 'auto';
   };
 
-  const login = (password: string): boolean => {
-    if (password === MASTER_PASSWORD) {
-      setIsAuthenticated(true);
-      return true;
+  const login = async (password: string): Promise<boolean> => {
+    try {
+      const response = await fetch(`${API_URL}/api/admin/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password }),
+      });
+      
+      if (!response.ok && response.status !== 401) {
+        console.error('Login request failed:', response.statusText);
+        return false;
+      }
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setIsAuthenticated(true);
+        return true;
+      } else {
+        setIsAuthenticated(false);
+        return false;
+      }
+    } catch (error) {
+      console.error('An error occurred during login:', error);
+      setIsAuthenticated(false);
+      return false;
     }
-    return false;
   };
 
 

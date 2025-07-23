@@ -102,6 +102,21 @@ app.post('/api/content/reset', async (req, res) => {
     }
 });
 
+app.post('/api/admin/login', (req, res) => {
+    const { password } = req.body;
+    
+    // Use the environment variable, with the old hardcoded password as a fallback.
+    const masterPassword = process.env.MASTER_PASSWORD || '39344323';
+
+    if (password === masterPassword) {
+        // Note: For higher security, this endpoint should return a session token (JWT)
+        // to be used for authenticating subsequent admin actions.
+        res.json({ success: true });
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid credentials' });
+    }
+});
+
 
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
