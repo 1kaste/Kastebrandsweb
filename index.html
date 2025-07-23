@@ -36,7 +36,7 @@
               'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
               'colorful-glow': 'colorful-glow 16s ease-in-out infinite',
               'fade-in': 'fadeIn 0.5s ease-in-out forwards',
-              'fade-out': 'fadeOut 0.5s ease-in-out forwards',
+              'fadeOut': 'fadeOut 0.5s ease-in-out forwards',
               'loading-bar': 'loadingBar 4.0s ease-out forwards',
               'marquee': 'marquee 40s linear infinite',
               'marquee-reverse': 'marquee-reverse 40s linear infinite',
@@ -148,8 +148,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <style id="branding-styles"></style>
     <style>
-      /* Prevents white flash before React loads by setting the default background color */
-      body {
+      /* Default brand colors for splash screen and initial load */
+      :root {
+        --color-brand-primary: #0A777B;
+        --color-brand-secondary: #F5B841;
+      }
+
+      /* Prevents white flash before React loads by setting the default background color on the root element */
+      html {
         background-color: #1A1A1A; /* Matches the default --color-brand-bg */
       }
       .flash-highlight {

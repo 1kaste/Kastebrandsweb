@@ -76,12 +76,12 @@ const App: React.FC = () => {
     // Fetch initial content
     fetchAndCacheSiteContent().then(() => {
         applyBrandingStyles();
-        setIsLoading(false);
+        setContentVersion(v => v + 1); // Force re-render with fetched content
     }).catch(err => {
         console.error("Failed to load initial site content:", err);
-        // Use fallback styles if fetch fails but we have default content
+        // Use fallback styles if fetch fails
         applyBrandingStyles();
-        setIsLoading(false);
+        setContentVersion(v => v + 1); // Force re-render with fallback content
     });
 
     // Setup WebSocket connection for real-time updates
@@ -110,7 +110,7 @@ const App: React.FC = () => {
   }, []);
 
   if (isLoading) {
-    return <SplashScreen onFinished={() => {}} />;
+    return <SplashScreen onFinished={() => setIsLoading(false)} />;
   }
 
   return (

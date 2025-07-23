@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { getSiteContent } from '../services/siteContent';
 
@@ -12,38 +13,43 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinished }) => {
   const { splashScreen, logoUrl } = branding;
 
   useEffect(() => {
-    // Timers for unmounting the splash screen
-    const mainTimer = setTimeout(() => {
-      setUnmounting(true);
-    }, 4500); // Start fade-out at 4.5s
+    let percentageInterval: number | undefined;
 
-    const unmountTimer = setTimeout(() => {
-      onFinished();
-    }, 5000); // Total duration of splash screen + fade-out
+    // The total time until the loading bar hits 100% and the fade-out starts
+    const totalAnimationTime = 2800; // ms
+    const startDelay = 800; // ms, to match fade-in of text elements
+    const loadingDuration = totalAnimationTime - startDelay; // 2000ms for the bar to animate
+    const intervalTime = loadingDuration / 100; // Time per 1% increment
 
-    // Timer for percentage counter
-    let intervalId: number;
-    const startTimeout = setTimeout(() => {
-        intervalId = window.setInterval(() => {
+    const timer = setTimeout(() => {
+        percentageInterval = window.setInterval(() => {
             setPercentage(prev => {
-                if (prev >= 100) {
-                    clearInterval(intervalId);
+                if (prev >= 99) {
+                    clearInterval(percentageInterval);
+                    
+                    // Set to 100% and start exit sequence
+                    setPercentage(100);
+                    setTimeout(() => {
+                      setUnmounting(true);
+                      // Wait for fade-out animation to complete before calling onFinished
+                      setTimeout(onFinished, 500);
+                    }, 200); // Brief pause at 100%
+
                     return 100;
                 }
                 return prev + 1;
             });
-        }, 40); // 100 steps * 40ms/step = 4000ms = 4s
-    }, 900); // Wait 900ms before starting the counter, matching loading bar animation start
+        }, intervalTime);
+    }, startDelay);
 
     return () => {
-      clearTimeout(mainTimer);
-      clearTimeout(unmountTimer);
-      clearTimeout(startTimeout);
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
+        clearTimeout(timer);
+        if (percentageInterval) {
+            clearInterval(percentageInterval);
+        }
     };
   }, [onFinished]);
+
 
   return (
     <div
@@ -64,14 +70,14 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinished }) => {
           />
           <h1
             id="splash-brand-name"
-            className="text-3xl sm:text-4xl font-bold font-heading text-brand-light opacity-0 animate-fade-in-up"
+            className="text-3xl sm:text-4xl font-bold font-heading text-white opacity-0 animate-fade-in-up"
             style={{ animationDelay: '400ms' }}
           >
             {splashScreen.brandName}
           </h1>
           <p
             id="splash-brand-description"
-            className="mt-2 text-brand-gray/80 opacity-0 animate-fade-in-up"
+            className="mt-2 text-white/80 opacity-0 animate-fade-in-up"
             style={{ animationDelay: '600ms' }}
           >
             {splashScreen.description}
@@ -81,7 +87,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinished }) => {
         <div id="splash-loader-wrapper" className="absolute bottom-10 md:bottom-20 w-full max-w-xs px-4">
           <div 
               id="splash-loader-percentage" 
-              className="text-center text-sm font-semibold font-sans text-brand-gray mb-2 opacity-0 animate-fade-in-up"
+              className="text-center text-sm font-semibold font-sans bg-gradient-to-r from-brand-primary to-brand-secondary text-transparent bg-clip-text mb-2 opacity-0 animate-fade-in-up"
               style={{ animationDelay: '800ms' }}
           >
               Loading... {percentage}%
@@ -89,8 +95,8 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinished }) => {
           <div id="splash-loading-bar-container" className="w-full bg-brand-surface rounded-full h-1.5 opacity-0 animate-fade-in-up" style={{ animationDelay: '800ms' }}>
             <div
               id="splash-loading-bar-indicator"
-              className="bg-gradient-to-r from-brand-primary to-brand-secondary rounded-full h-1.5 animate-loading-bar"
-              style={{ animationDelay: '900ms' }}
+              className="bg-gradient-to-r from-brand-primary to-brand-secondary rounded-full h-1.5 transition-all duration-150 ease-linear"
+              style={{ width: `${percentage}%` }}
             ></div>
           </div>
         </div>
