@@ -1,7 +1,28 @@
 
 import { SiteContent, Service, Project } from '../types';
 
-export const API_URL = (typeof process !== 'undefined' && process.env.REACT_APP_API_URL) || 'http://localhost:3001';
+/**
+ * Determines the API URL based on the browser's hostname.
+ * This approach supports a buildless deployment environment where
+ * Node.js `process.env` variables are not directly available.
+ *
+ * @returns {string} The appropriate API URL.
+ */
+const getApiUrl = (): string => {
+    const hostname = window.location.hostname;
+
+    // Check for local development environments
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        return 'http://localhost:3001';
+    }
+
+    // For deployed environments (like Netlify), use the production backend URL.
+    // This URL corresponds to the backend server deployed on a service like Render.
+    // It is derived from the backend's package name: "kaste-brands-backend".
+    return 'https://kaste-brands-backend.onrender.com';
+};
+
+export const API_URL = getApiUrl();
 
 // In-memory cache for the site content
 let siteContentCache: SiteContent | null = null;
