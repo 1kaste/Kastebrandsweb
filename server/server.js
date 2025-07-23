@@ -13,16 +13,28 @@ const server = http.createServer(app);
 // Connect to MongoDB
 connectDB();
 
-// Middleware
-app.use(cors());
+// --- CORS Configuration ---
+// Define allowed origins. For maximum flexibility with Netlify previews,
+// we'll allow any origin. In a higher-security production environment,
+// this might be locked down to specific domains.
+const corsOptions = {
+  origin: '*', // Allow all origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow common methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow common headers
+};
+
+// --- Middleware ---
+// Apply CORS middleware to all routes
+app.use(cors(corsOptions));
+// Handle preflight requests across all routes
+app.options('*', cors(corsOptions));
+
 app.use(express.json({ limit: '50mb' })); // Increase limit for potential base64 images
 
-// Socket.IO Setup
+// --- Socket.IO Setup ---
+// Use the same CORS options for Socket.IO
 const io = new Server(server, {
-    cors: {
-        origin: "*", // Allow all origins for simplicity, can be restricted in production
-        methods: ["GET", "POST"]
-    }
+    cors: corsOptions
 });
 
 io.on('connection', (socket) => {
@@ -34,7 +46,7 @@ io.on('connection', (socket) => {
 
 // Health check route for Render
 app.get('/', (req, res) => {
-    res.send('Kaste Brands & Designs API is running.');
+    res.status(200).send('Kaste Brands & Designs API is running.');
 });
 
 // API Routes
