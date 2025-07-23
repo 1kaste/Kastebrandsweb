@@ -14,25 +14,25 @@ const server = http.createServer(app);
 connectDB();
 
 // --- CORS Configuration ---
-// Define allowed origins. For maximum flexibility with Netlify previews,
-// we'll allow any origin. In a higher-security production environment,
-// this might be locked down to specific domains.
+// This setup is robustly configured to handle requests from any origin,
+// including preflight OPTIONS requests sent by browsers. This is crucial
+// for fixing the CORS errors when the frontend is deployed on a different
+// domain (like Netlify) from the backend (like Render).
 const corsOptions = {
-  origin: '*', // Allow all origins
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow common methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allow common headers
+  origin: '*', // Allows all domains to make requests.
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Specifies allowed HTTP methods.
+  allowedHeaders: ['Content-Type', 'Authorization'], // Specifies allowed request headers.
 };
 
 // --- Middleware ---
-// Apply CORS middleware to all routes
+// By using `app.use(cors(corsOptions))`, we enable CORS for all routes.
+// This single line correctly handles simple and preflighted CORS requests.
+// A separate `app.options('*', ...)` call is not needed and has been removed.
 app.use(cors(corsOptions));
-// Handle preflight requests across all routes
-app.options('*', cors(corsOptions));
-
 app.use(express.json({ limit: '50mb' })); // Increase limit for potential base64 images
 
 // --- Socket.IO Setup ---
-// Use the same CORS options for Socket.IO
+// Use the same CORS options for Socket.IO to ensure real-time connections work across domains.
 const io = new Server(server, {
     cors: corsOptions
 });
