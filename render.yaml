@@ -1,0 +1,25 @@
+# render.yaml
+# Blueprint for deploying the Kaste Brands & Designs backend to Render.
+# This file should be placed in the root of your repository.
+
+services:
+  # Web Service for the Node.js backend API
+  - type: web
+    name: kaste-brands-api
+    env: node
+    # Specifies that the service is located in the 'server' subdirectory.
+    rootDir: ./server
+    # Specifies the plan. 'free' is suitable for development and small projects.
+    plan: free
+    # Health check path to ensure the service is running.
+    healthCheckPath: /
+    # Command to install dependencies. Render runs this in the `rootDir`.
+    buildCommand: "npm install"
+    # Command to start the server. The 'npm start' script is defined in server/package.json.
+    startCommand: "npm start"
+    # Defines the environment variables required by the application.
+    # IMPORTANT: You must add the value for MONGODB_URI in the Render dashboard
+    # under Environment -> Environment Variables.
+    envVars:
+      - key: MONGODB_URI
+        sync: false # Prevents Render from overwriting the value set in the dashboard.
